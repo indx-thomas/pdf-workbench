@@ -1,0 +1,3 @@
+[submodule "vendor/qpdf"]
+	path = vendor/qpdf
+	url = https://github.com/indx-thomas/pdf-workbench-qpdf.git

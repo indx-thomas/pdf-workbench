@@ -1,0 +1,15 @@
+[package]
+name = "pdf-workbench-pdfium"
+description = "PDFium rendering and interactive-document boundary for PDF Workbench"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+pdf-workbench-core = { path = "../document-core" }
+
+[lints]
+workspace = true
