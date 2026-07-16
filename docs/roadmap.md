@@ -8,7 +8,7 @@ Dates are deliberately omitted until the native-engine integration spike produce
 - [x] Establish a clean qpdf fork and pin it as a submodule
 - [x] Assign qpdf structural and PDFium interactive responsibilities
 - [x] Exclude JavaScript/V8, XFA, and hosted services from the core
-- [ ] Build qpdf on Windows and expose one safe adapter operation
+- [x] Build qpdf on Windows and expose one safe, read-only adapter operation (`check`)
 - [ ] Build PDFium on Windows with V8/XFA disabled and render one page
 - [ ] Establish sanitized PDF fixtures and expected-results manifests
 - [ ] Establish fixed-hardware startup, first-render, scroll, memory, and cancellation benchmarks

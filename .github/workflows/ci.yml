@@ -45,3 +45,39 @@ jobs:
 
       - name: Run tests
         run: cargo test --workspace
+
+  qpdf-native:
+    name: qpdf native check (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source and qpdf
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install stable Rust
+        run: |
+          rustup set profile minimal
+          rustup toolchain install stable
+          rustup default stable
+
+      - name: Build pinned qpdf
+        shell: pwsh
+        run: ./scripts/build-qpdf.ps1
+
+      - name: Create native smoke fixture
+        shell: pwsh
+        run: |
+          $qpdf = (Resolve-Path "build/qpdf-install/bin/qpdf.exe").Path
+          $fixture = Join-Path $env:RUNNER_TEMP "qpdf-empty.pdf"
+          & $qpdf --empty $fixture
+          if ($LASTEXITCODE -ne 0) {
+            throw "qpdf fixture creation failed with exit code $LASTEXITCODE."
+          }
+          "PDF_WORKBENCH_QPDF_BIN=$qpdf" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "PDF_WORKBENCH_QPDF_TEST_PDF=$fixture" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Run native adapter check
+        run: cargo test -p pdf-workbench-qpdf --test native_check -- --ignored --nocapture

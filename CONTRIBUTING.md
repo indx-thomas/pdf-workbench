@@ -19,6 +19,8 @@ cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
 ```
 
+Windows contributors can build the pinned native qpdf executable with `./scripts/build-qpdf.ps1`; see `docs/qpdf-integration.md` for prerequisites and the opt-in integration test.
+
 Pull requests should:
 
 - solve one coherent problem;
