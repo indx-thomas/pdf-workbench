@@ -46,6 +46,7 @@ crates/
 docs/
   adr/                 Architecture decisions
   security/            Threat model and security design
+scripts/               Reproducible native-engine builds
 vendor/
   qpdf/                Pinned qpdf fork submodule
 ```
@@ -67,7 +68,15 @@ cargo test --workspace
 cargo run -p pdf-workbench-cli -- --capabilities
 ```
 
-The current Rust crates establish compile-time architecture boundaries; native engine bindings and the desktop shell are not implemented yet.
+On Windows, the first native integration builds the pinned qpdf fork and exposes a read-only structural check:
+
+```powershell
+./scripts/build-qpdf.ps1
+$env:PDF_WORKBENCH_QPDF_BIN = (Resolve-Path ./build/qpdf-install/bin/qpdf.exe).Path
+cargo run -p pdf-workbench-cli -- check ./document.pdf
+```
+
+See [qpdf integration](docs/qpdf-integration.md) for prerequisites, exit semantics, and current isolation limitations. The desktop shell and PDFium integration are not implemented yet.
 
 ## Contributing and security
 
