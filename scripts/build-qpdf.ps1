@@ -56,6 +56,18 @@ if ($LASTEXITCODE -ne 0) {
     throw "vcpkg dependency installation failed with exit code $LASTEXITCODE."
 }
 
+$dependencyRoot = Join-Path $vcpkgRoot "installed/$Triplet"
+$dependencyIncludeDir = Join-Path $dependencyRoot "include"
+$dependencyLibraryDir = if ($Configuration -eq "Debug") {
+    Join-Path $dependencyRoot "debug/lib"
+} else {
+    Join-Path $dependencyRoot "lib"
+}
+if (-not (Test-Path $dependencyIncludeDir -PathType Container) -or
+    -not (Test-Path $dependencyLibraryDir -PathType Container)) {
+    throw "vcpkg did not create the expected include and library directories under '$dependencyRoot'."
+}
+
 $toolchain = Join-Path $vcpkgRoot "scripts/buildsystems/vcpkg.cmake"
 $cmakeArguments = @(
     "-S", $SourceDir,
@@ -63,6 +75,8 @@ $cmakeArguments = @(
     "-A", "x64",
     "-DCMAKE_TOOLCHAIN_FILE=$toolchain",
     "-DVCPKG_TARGET_TRIPLET=$Triplet",
+    "-DCMAKE_INCLUDE_PATH=$dependencyIncludeDir",
+    "-DCMAKE_LIBRARY_PATH=$dependencyLibraryDir",
     "-DCMAKE_INSTALL_PREFIX=$InstallDir",
     "-DBUILD_SHARED_LIBS=OFF",
     "-DBUILD_STATIC_LIBS=ON",

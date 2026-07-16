@@ -11,7 +11,7 @@ git submodule update --init --recursive
 ./scripts/build-qpdf.ps1
 ```
 
-The script builds a static qpdf executable at `build/qpdf-install/bin/qpdf.exe`. It uses the pinned submodule, zlib, libjpeg-turbo, and qpdf's native crypto provider. The crypto-provider decision must be reviewed before encryption features are considered production-ready.
+The script builds a static qpdf executable at `build/qpdf-install/bin/qpdf.exe`. It uses the pinned submodule, zlib, libjpeg-turbo, and qpdf's native crypto provider. Dependency include and library directories are passed explicitly because qpdf's current CMake discovery does not consume vcpkg package targets. The crypto-provider decision must be reviewed before encryption features are considered production-ready.
 
 CMake selects the newest supported installed Visual Studio generator. To select one explicitly, pass `-Generator`, for example `-Generator "Visual Studio 17 2022"`.
 
