@@ -5,7 +5,8 @@ param(
     [string] $InstallDir,
     [ValidateSet("Debug", "Release", "RelWithDebInfo", "MinSizeRel")]
     [string] $Configuration = "Release",
-    [string] $Triplet = "x64-windows-static"
+    [string] $Triplet = "x64-windows-static",
+    [string] $Generator
 )
 
 $ErrorActionPreference = "Stop"
@@ -59,7 +60,6 @@ $toolchain = Join-Path $vcpkgRoot "scripts/buildsystems/vcpkg.cmake"
 $cmakeArguments = @(
     "-S", $SourceDir,
     "-B", $BuildDir,
-    "-G", "Visual Studio 17 2022",
     "-A", "x64",
     "-DCMAKE_TOOLCHAIN_FILE=$toolchain",
     "-DVCPKG_TARGET_TRIPLET=$Triplet",
@@ -75,6 +75,9 @@ $cmakeArguments = @(
     "-DINSTALL_PKGCONFIG=OFF",
     "-DINSTALL_CMAKE_PACKAGE=OFF"
 )
+if ($Generator) {
+    $cmakeArguments += @("-G", $Generator)
+}
 
 Write-Host "Configuring qpdf from $SourceDir"
 & cmake @cmakeArguments
