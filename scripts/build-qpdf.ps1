@@ -119,7 +119,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Building qpdf ($Configuration)"
-& cmake --build $BuildDir --config $Configuration --parallel --target qpdf fix-qdf
+& cmake --build $BuildDir --config $Configuration --parallel --target qpdf fix-qdf zlib-flate
 if ($LASTEXITCODE -ne 0) {
     throw "qpdf build failed with exit code $LASTEXITCODE."
 }
