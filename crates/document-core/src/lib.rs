@@ -13,7 +13,7 @@ pub enum Capability {
     TextExtraction,
     /// Search document text.
     Search,
-    /// Read and fill AcroForm fields.
+    /// Read and fill `AcroForm` fields.
     FormFill,
     /// Read and write review annotations.
     Annotations,
