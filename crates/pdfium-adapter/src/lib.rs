@@ -34,7 +34,7 @@ pub const fn descriptor() -> BackendDescriptor {
 
 #[cfg(test)]
 mod tests {
-    use super::{descriptor, ENABLE_V8, ENABLE_XFA};
+    use super::{ENABLE_V8, ENABLE_XFA, descriptor};
     use pdf_workbench_core::Capability;
 
     #[test]
