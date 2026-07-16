@@ -5,9 +5,7 @@
 use pdf_workbench_core::{BackendDescriptor, Capability};
 use std::{
     error::Error,
-    fmt,
-    fs,
-    io,
+    fmt, fs, io,
     path::{Path, PathBuf},
     process::{Command, Stdio},
 };
@@ -169,7 +167,11 @@ impl fmt::Display for QpdfError {
                 )
             }
             Self::InputNotFile { path } => {
-                write!(formatter, "PDF input path is not a file: {}", path.display())
+                write!(
+                    formatter,
+                    "PDF input path is not a file: {}",
+                    path.display()
+                )
             }
             Self::InvocationFailed { executable, source } => {
                 write!(
@@ -179,9 +181,7 @@ impl fmt::Display for QpdfError {
                 )
             }
             Self::CheckFailed {
-                exit_code,
-                stderr,
-                ..
+                exit_code, stderr, ..
             } => {
                 let status = exit_code.map_or_else(
                     || "without an exit code".to_owned(),
@@ -220,12 +220,11 @@ impl Qpdf {
     /// local worker.
     pub fn new(executable: impl AsRef<Path>) -> Result<Self, QpdfError> {
         let requested = executable.as_ref();
-        let executable = fs::canonicalize(requested).map_err(|source| {
-            QpdfError::ExecutableUnavailable {
+        let executable =
+            fs::canonicalize(requested).map_err(|source| QpdfError::ExecutableUnavailable {
                 path: requested.to_owned(),
                 source,
-            }
-        })?;
+            })?;
 
         if !executable.is_file() {
             return Err(QpdfError::ExecutableNotFile { path: executable });
@@ -317,10 +316,8 @@ mod tests {
     fn rejects_an_unavailable_input_before_invocation() {
         let executable = env::current_exe().expect("the test executable must be available");
         let qpdf = Qpdf::new(executable).expect("the test executable is a regular file");
-        let path = env::temp_dir().join(format!(
-            "pdf-workbench-{}-missing-input.pdf",
-            process::id()
-        ));
+        let path =
+            env::temp_dir().join(format!("pdf-workbench-{}-missing-input.pdf", process::id()));
 
         let error = qpdf
             .check(&path)

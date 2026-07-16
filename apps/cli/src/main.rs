@@ -21,7 +21,9 @@ fn print_usage() {
     eprintln!("  pdf-workbench-cli --capabilities");
     eprintln!("  pdf-workbench-cli check <file.pdf>");
     eprintln!();
-    eprintln!("The check command requires PDF_WORKBENCH_QPDF_BIN to contain an explicit qpdf path.");
+    eprintln!(
+        "The check command requires PDF_WORKBENCH_QPDF_BIN to contain an explicit qpdf path."
+    );
 }
 
 fn print_qpdf_output(stdout: &str, stderr: &str) {
