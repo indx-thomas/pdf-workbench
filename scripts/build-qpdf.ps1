@@ -67,6 +67,22 @@ if (-not (Test-Path $dependencyIncludeDir -PathType Container) -or
     -not (Test-Path $dependencyLibraryDir -PathType Container)) {
     throw "vcpkg did not create the expected include and library directories under '$dependencyRoot'."
 }
+$zlibLibrary = @("zlib.lib", "zlibstatic.lib", "zs.lib") |
+    ForEach-Object { Join-Path $dependencyLibraryDir $_ } |
+    Where-Object { Test-Path $_ -PathType Leaf } |
+    Select-Object -First 1
+$jpegLibrary = @("jpeg.lib", "jpeg-static.lib") |
+    ForEach-Object { Join-Path $dependencyLibraryDir $_ } |
+    Where-Object { Test-Path $_ -PathType Leaf } |
+    Select-Object -First 1
+if (-not $zlibLibrary -or -not $jpegLibrary) {
+    $availableLibraries = (Get-ChildItem $dependencyLibraryDir -Filter "*.lib" -Name) -join ", "
+    throw "Required qpdf libraries were not found in '$dependencyLibraryDir'. Available: $availableLibraries"
+}
+if (-not (Test-Path (Join-Path $dependencyIncludeDir "zlib.h") -PathType Leaf) -or
+    -not (Test-Path (Join-Path $dependencyIncludeDir "jpeglib.h") -PathType Leaf)) {
+    throw "Required qpdf headers were not found in '$dependencyIncludeDir'."
+}
 
 $toolchain = Join-Path $vcpkgRoot "scripts/buildsystems/vcpkg.cmake"
 $cmakeArguments = @(
@@ -75,8 +91,10 @@ $cmakeArguments = @(
     "-A", "x64",
     "-DCMAKE_TOOLCHAIN_FILE=$toolchain",
     "-DVCPKG_TARGET_TRIPLET=$Triplet",
-    "-DCMAKE_INCLUDE_PATH=$dependencyIncludeDir",
-    "-DCMAKE_LIBRARY_PATH=$dependencyLibraryDir",
+    "-DZLIB_H_PATH=$dependencyIncludeDir",
+    "-DZLIB_LIB_PATH=$zlibLibrary",
+    "-DLIBJPEG_H_PATH=$dependencyIncludeDir",
+    "-DLIBJPEG_LIB_PATH=$jpegLibrary",
     "-DCMAKE_INSTALL_PREFIX=$InstallDir",
     "-DBUILD_SHARED_LIBS=OFF",
     "-DBUILD_STATIC_LIBS=ON",
