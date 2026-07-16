@@ -13,6 +13,11 @@ pub const ENABLE_V8: bool = false;
 /// Required build flag: dynamic XFA is intentionally excluded.
 pub const ENABLE_XFA: bool = false;
 
+const _: () = {
+    assert!(!ENABLE_V8);
+    assert!(!ENABLE_XFA);
+};
+
 const CAPABILITIES: &[Capability] = &[
     Capability::Render,
     Capability::TextExtraction,
@@ -34,14 +39,8 @@ pub const fn descriptor() -> BackendDescriptor {
 
 #[cfg(test)]
 mod tests {
-    use super::{ENABLE_V8, ENABLE_XFA, descriptor};
+    use super::descriptor;
     use pdf_workbench_core::Capability;
-
-    #[test]
-    fn active_content_is_disabled_by_contract() {
-        assert!(!ENABLE_V8);
-        assert!(!ENABLE_XFA);
-    }
 
     #[test]
     fn pdfium_owns_interactive_capabilities() {
