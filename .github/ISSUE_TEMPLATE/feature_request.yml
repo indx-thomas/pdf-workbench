@@ -1,0 +1,40 @@
+name: Feature request
+description: Propose a focused workflow or compatibility improvement.
+title: "feature: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe the workflow problem independently of a proposed implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Viewer and navigation
+        - Page and document operations
+        - Conversion and OCR
+        - Forms
+        - Review and annotations
+        - Redaction and sanitization
+        - Security and signatures
+        - Automation and templates
+        - Performance and reliability
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Compatibility, security, or privacy considerations

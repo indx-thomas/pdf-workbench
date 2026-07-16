@@ -1,0 +1,17 @@
+[package]
+name = "pdf-workbench-cli"
+description = "Headless command-line entry point for PDF Workbench"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+pdf-workbench-core = { path = "../../crates/document-core" }
+pdf-workbench-pdfium = { path = "../../crates/pdfium-adapter" }
+pdf-workbench-qpdf = { path = "../../crates/qpdf-adapter" }
+
+[lints]
+workspace = true

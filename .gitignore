@@ -1,0 +1,14 @@
+/target/
+/.idea/
+/.vscode/
+*.user
+*.suo
+*.swp
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# Local fixtures may contain sensitive documents. Only sanitized fixtures belong in Git.
+/fixtures/private/
+/fixtures/local/

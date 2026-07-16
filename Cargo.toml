@@ -1,0 +1,23 @@
+[workspace]
+members = [
+  "apps/cli",
+  "crates/document-core",
+  "crates/pdfium-adapter",
+  "crates/qpdf-adapter",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.0.1"
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/indx-thomas/pdf-workbench"
+rust-version = "1.85"
+
+[workspace.lints.rust]
+missing_docs = "warn"
+unsafe_code = "warn"
+
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"

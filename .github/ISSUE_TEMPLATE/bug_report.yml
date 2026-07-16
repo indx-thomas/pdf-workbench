@@ -1,0 +1,49 @@
+name: Bug report
+description: Report reproducible incorrect behaviour using a sanitized fixture.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Do not attach confidential documents, credentials, private keys, or suspected exploits. Use the private security process for vulnerabilities.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.0.1 or commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: Reproduction and observed behaviour
+      description: Include minimal steps and a sanitized fixture or generator when possible.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I have removed confidential and personal information.
+          required: true
+        - label: This is not a security vulnerability requiring private disclosure.
+          required: true
