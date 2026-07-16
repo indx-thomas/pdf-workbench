@@ -91,6 +91,7 @@ $cmakeArguments = @(
     "-A", "x64",
     "-DCMAKE_TOOLCHAIN_FILE=$toolchain",
     "-DVCPKG_TARGET_TRIPLET=$Triplet",
+    '-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>',
     "-DZLIB_H_PATH=$dependencyIncludeDir",
     "-DZLIB_LIB_PATH=$zlibLibrary",
     "-DLIBJPEG_H_PATH=$dependencyIncludeDir",
@@ -118,7 +119,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Building qpdf ($Configuration)"
-& cmake --build $BuildDir --config $Configuration --parallel --target qpdf
+& cmake --build $BuildDir --config $Configuration --parallel --target qpdf fix-qdf
 if ($LASTEXITCODE -ne 0) {
     throw "qpdf build failed with exit code $LASTEXITCODE."
 }
