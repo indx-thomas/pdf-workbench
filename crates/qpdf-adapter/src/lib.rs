@@ -258,7 +258,11 @@ impl Qpdf {
 
         let output = Command::new(&self.executable)
             .arg("--check")
-            .arg(input)
+            // `canonicalize` returns a verbatim `\\?\` path on Windows, which
+            // qpdf 12.4 does not parse correctly as a command-line argument.
+            // The canonical path is used for validation; the original OS
+            // string preserves non-Unicode support without the verbatim prefix.
+            .arg(requested)
             .stdin(Stdio::null())
             .output()
             .map_err(|source| QpdfError::InvocationFailed {
