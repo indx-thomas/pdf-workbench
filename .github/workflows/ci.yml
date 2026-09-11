@@ -71,10 +71,33 @@ jobs:
         shell: pwsh
         run: |
           $qpdf = (Resolve-Path "build/qpdf-install/bin/qpdf.exe").Path
-          $fixture = Join-Path $env:RUNNER_TEMP "qpdf-empty.pdf"
-          & $qpdf --empty $fixture
+          $fixture = Join-Path $env:RUNNER_TEMP "qpdf-one-page.pdf"
+          # Synthetic blank page: ASCII and explicit LF keep xref byte offsets deterministic.
+          $objects = @(
+            '<< /Type /Catalog /Pages 2 0 R >>',
+            '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+            '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << >> >>'
+          )
+          $pdf = "%PDF-1.4`n"
+          $offsets = @()
+          for ($i = 0; $i -lt $objects.Count; $i++) {
+            $offsets += $pdf.Length
+            $pdf += "$($i + 1) 0 obj`n$($objects[$i])`nendobj`n"
+          }
+          $xref = $pdf.Length
+          $pdf += "xref`n0 4`n0000000000 65535 f `n"
+          foreach ($offset in $offsets) {
+            $pdf += ("{0:D10} 00000 n `n" -f $offset)
+          }
+          $pdf += "trailer`n<< /Size 4 /Root 1 0 R >>`nstartxref`n$xref`n%%EOF`n"
+          [System.IO.File]::WriteAllBytes($fixture, [System.Text.Encoding]::ASCII.GetBytes($pdf))
+          & $qpdf --check $fixture
           if ($LASTEXITCODE -ne 0) {
-            throw "qpdf fixture creation failed with exit code $LASTEXITCODE."
+            throw "qpdf fixture validation failed with exit code $LASTEXITCODE."
+          }
+          $pages = & $qpdf --show-npages $fixture
+          if ($LASTEXITCODE -ne 0 -or "$pages".Trim() -ne "1") {
+            throw "Expected exactly one page in the native smoke fixture."
           }
           "PDF_WORKBENCH_QPDF_BIN=$qpdf" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "PDF_WORKBENCH_QPDF_TEST_PDF=$fixture" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
